@@ -1986,6 +1986,7 @@
     <Content Include="Views\TiposExames\Index.cshtml" />
     <Content Include="Views\Consultas\Cadastro.cshtml" />
     <Content Include="Views\Exames\Index.cshtml" />
+    <Content Include="Views\Consultas\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

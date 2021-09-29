@@ -12,7 +12,12 @@ namespace Desafio.Controllers
     {
         private DataBase db = new DataBase();
         // GET: Consultas
-        
+        public ActionResult Index()
+        {
+            List<Consultas> consultas = new List<Consultas>();
+            consultas = db.Consultas.ToList();
+            return View(consultas);
+        }
         public ActionResult Cadastro(int? id)
         {
             Consultas consultas = new Consultas();
@@ -65,17 +70,27 @@ namespace Desafio.Controllers
                 obj.IdTipoExame = model.IdTipoExame;
                 obj.Data = model.Data;
 
+                var data = db.Consultas.OrderByDescending(c=> c.Id).FirstOrDefault();
+                if(data != null)
+                {
+                    obj.Protocolo = data.Id.ToString() + model.IdPaciente + model.IdExame + model.IdTipoExame;
+                }
+                else
+                {
+                    obj.Protocolo = "1" + model.IdPaciente + model.IdExame + model.IdTipoExame;
+                }
+                
+
                 if (obj.Id == 0)
                 {
                     db.Consultas.Add(obj);
                 }
                 db.SaveChanges();
-
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", model);
             }
             catch (Exception ex)
             {
-                return RedirectToAction("Cadastro", model);
+                return RedirectToAction("Index", "Home");
             }
         }
 

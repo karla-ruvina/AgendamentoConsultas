@@ -38,7 +38,8 @@
                         </div>
                         <div class="col-sm-4 mb-3 mb-sm-0">
                             <label class="form-label">Data de Nascimento</label>
-                            @Html.TextBoxFor(c => c.DataNascimento, new { @class = "form-control", @autocomplete = "off", required = "required" })
+                            <input class="form-control" data-val="true" data-val-date="The field DataNascimento must be a date." data-val-required="O campo DataNascimento é obrigatório." id="DataNascimento" name="DataNascimento" placeholder="__/__/____" required="required"/>
+                            <div class="invalid-feedback" id="avisar-data"></div>
                         </div>
                         <div class="col-sm-4 mb-3">
                             <label class="form-label">Sexo</label>
@@ -50,6 +51,7 @@
                         <div class="col-sm-4 mb-3 mb-sm-0">
                             <label class="form-label">Telefone</label>
                             @Html.TextBoxFor(c => c.Telefone, new { @class = "form-control", @placeholder = "(__) _____-____" })
+                            <div class="invalid-feedback" id="avisar-telefone"></div>
                         </div>
                         <div class="col-sm-8 mb-3 mb-sm-0">
                             <label class="form-label">Email</label>
@@ -69,6 +71,7 @@
 
 @section Scripts{
     <script src="~/Content/js/cpf-validate.js"></script>
+
     <script>
         $(document).ready(function () {
 
@@ -106,6 +109,7 @@
                      if ($("#Cpf").val().length === 14 ) {
                          $('#avisar-cpf-existente').show();
                          $('#avisar-cpf-existente').text('CPF inválido.');
+                         $(".salvar").attr("disabled", true);
                      }
                  }
             });
@@ -122,6 +126,22 @@
             })
 
         });
+
+        $(document).on('change', '#DataNascimento', function () {
+            var d = $(this).val().match(/\d+/g);
+            var dataEn = d[1] + "/" + d[0] + "/" + d[2]
+            var dataParse = Date.parse(dataEn)
+            if (isNaN(dataParse) == true) {
+                $('#avisar-data').show();
+                $('#avisar-data').text('Data Inválida.');
+                $(".salvar").attr("disabled", true);
+                return true;
+            } else {
+                $('#avisar-data').hide();
+                $('#avisar-data').text('');
+                $(".salvar").attr("disabled", false);
+            }
+        })
 
     </script>
 
