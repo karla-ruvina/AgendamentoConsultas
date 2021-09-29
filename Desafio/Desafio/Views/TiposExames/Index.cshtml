@@ -1,0 +1,58 @@
+﻿@model List<Desafio.Models.TiposExames>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Main Content -->
+<div id="content">
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800 mt-5">Tipos de Exames</h1>
+        @*<p class="mb-4">
+                DataTables is a third party plugin that is used to generate the demo table below.
+                For more information about DataTables, please visit the <a target="_blank"
+                                                                           href="https://datatables.net">official DataTables documentation</a>.
+            </p>*@
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Lista de Tipos de Exames</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th width="40%">Nome</th>
+                                <th width="40%">Descrição</th>
+                                <th width="20%" class="text-center">Ações</th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Nome</td>
+                                    <td>@item.Descricao</td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("Cadastro", "TiposExames", new { id = item.Id })" class="btn btn-icon btn-hover-light-danger btn-sm"><i class="far fa-edit icon-md text-default"></i> Editar</a>
+
+                                        <a href="@Url.Action("Remover", "TiposExames", new { Id = item.Id })" class="btn btn-icon btn-hover-light-danger btn-sm" onclick="return confirm('Deseja realmente deletar esse registro?');"><i class="far fa-trash-alt icon-md text-default"></i> Excluir</a>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->

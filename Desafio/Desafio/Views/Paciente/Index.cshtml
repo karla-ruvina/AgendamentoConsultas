@@ -1,7 +1,51 @@
-﻿
+﻿@model List<Desafio.Models.Pacientes>
 @{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div id="content">
 
-<h2>Index</h2>
+    <div class="container-fluid">
 
+        <h1 class="h3 mb-2 text-gray-800 mt-5">Pacientes</h1>
+       
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Lista de Pacientes</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th width="30%">Nome</th>
+                                <th width="15%">Telefone</th>
+                                <th width="15%">Data de Nascimento</th>
+                                <th width="20%">Email</th>
+                                <th width="20%" class="text-center">Ações</th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Nome</td>
+                                    <td>@item.Telefone</td>
+                                    <td>@item.DataNascimento.ToShortDateString()</td>
+                                    <td>@item.Email</td>
+                                    <td class="text-center">
+                                        <a href="@Url.Action("Cadastro", "Paciente", new { id = item.Id })" class="btn btn-icon btn-hover-light-danger btn-sm"><i class="far fa-edit icon-md text-default"></i> Editar</a>
+
+                                        <a href="@Url.Action("Remover", "Paciente", new { Id = item.Id })" class="btn btn-icon btn-hover-light-danger btn-sm" onclick="return confirm('Deseja realmente deletar esse registro?');"><i class="far fa-trash-alt icon-md text-default"></i> Excluir</a>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

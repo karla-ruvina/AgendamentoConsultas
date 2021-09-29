@@ -1,0 +1,48 @@
+﻿@model Desafio.Models.TiposExames
+@{
+    ViewBag.Title = "Cadastro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card-body p-0">
+    <!-- Nested Row within Card Body -->
+    <div class="row" style="margin:10%;">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div class="p-5">
+                <div class="text-center">
+                    @if (Model == null || Model.Id == 0)
+                    {
+                        <h1 class="h4 text-gray-900 mb-4">Cadastro de Tipos de Exames</h1>
+                    }
+                    else
+                    {
+                        <h1 class="h4 text-gray-900 mb-4">Editar Tipos de Exames</h1>
+                    }
+                </div>
+
+                @using (Html.BeginForm("Salvar", "TiposExames", FormMethod.Post, new { id = "form-tipoexame", role = "form", @autocomplete = "off" }))
+                {
+                    @Html.HiddenFor(c => c.Id)
+                    <div class="form-group row">
+                        <div class="col-sm-12 mb-3 mb-sm-0">
+                            <label class="form-label">Nome</label>
+                            @Html.TextBoxFor(c => c.Nome, new { @class = "form-control", required = "required", maxlength = "100" })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12 mb-3 mb-sm-0">
+                            <label class="form-label">Descrição</label>
+                            @Html.TextAreaFor(c => c.Descricao, new { @class = "form-control", required = "required", maxlength = "256" })
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <button type="submit" class="btn btn-primary btn-user btn-block">Salvar</button>
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-facebook btn-user btn-block">Voltar</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

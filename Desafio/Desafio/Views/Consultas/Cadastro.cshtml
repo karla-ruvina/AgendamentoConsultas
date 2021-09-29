@@ -1,0 +1,127 @@
+﻿@model Desafio.Models.Consultas
+@{
+    ViewBag.Title = "Cadastro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card-body p-0">
+    <!-- Nested Row within Card Body -->
+    <div class="row" style="margin:10%;">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div class="p-5">
+                <div class="text-center">
+                    @if (Model == null || Model.Id == 0)
+                    {
+                        <h1 class="h4 text-gray-900 mb-4">Agendar Consulta</h1>
+                    }
+                    else
+                    {
+                        <h1 class="h4 text-gray-900 mb-4">Editar Consulta</h1>
+                    }
+                </div>
+
+                @using (Html.BeginForm("Salvar", "Consultas", FormMethod.Post, new { id = "form-consulta", role = "form", @autocomplete = "off" }))
+                {
+                    @Html.HiddenFor(c => c.Id)
+                    <div class="form-group row">
+                        <div class="col-sm-11 mb-3">
+                            <label class="form-label">Paciente</label>
+                            @Html.DropDownListFor(c => c.IdPaciente, (SelectList)ViewBag.Paciente, new { @class = "form-control select", required = "required" })
+                        </div>
+                        <div class="col-sm-1 mb-3 mt-4" style="align-self: self-end;">
+                            <a  href="@Url.Action("Cadastro", "Paciente")"><i class="fas fa-plus-circle"></i></a>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-4 mb-3">
+                            <label class="form-label">Tipo Exame</label>
+                            @Html.DropDownList("IdTipoExame", (SelectList)ViewBag.TipoExame, new { @class = "form-control", required = "required" })
+                        </div>
+
+                        <div class="col-sm-4 mb-3">
+                            <label class="form-label">Exame</label>
+                            @Html.DropDownList("IdExame", (SelectList)ViewBag.Exame, new { @class = "form-control", required = "required" })
+                        </div>
+                        <div class="col-sm-4 mb-3">
+                            <label class="form-label">Data da consulta</label>
+                            @Html.TextBoxFor(c => c.Data, new { @class = "form-control", type = "DateTime-Local", required = "required" })
+                            <div class="invalid-feedback" id="avisar-data"></div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <button type="submit" class="btn btn-primary btn-user btn-block salvar">Salvar</button>
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-facebook btn-user btn-block">Voltar</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#IdPaciente").select2();
+        });
+
+        $("#Data").change(function (e) {
+            $('#avisar-data').show();
+            $('#avisar-data').text('Verificando agenda...');
+                $.ajax({
+                    url: '@Url.Action("VerificarAgenda", "Consultas")',
+                    data: { dataconsulta: $("#Data").val(), id: $("#Id").val() },
+                    method: 'post',
+                    success: function (data) {
+                        console.log("data: " + data);
+                        if (data) {
+                            $('#avisar-data').show();
+                            $('#avisar-data').text('Data Indisponível.');
+                            $(".salvar").attr("disabled", true);
+                        }
+                        else {
+                            $('#avisar-data').hide();
+                            $('#avisar-data').text('');
+                            $(".salvar").attr("disabled", false);
+                        }
+                    },
+                    error: function () {
+                        console.log("Id da consulta que deu erro é: " + $("#Id").val());
+                        $('#avisar-data').text('Ocorreu algum erro ao verificar.');
+                    }
+                });
+            });
+
+
+        function CarregarExame(tipoexame, selecionado) {
+            if (tipoexame != null) {
+                $.ajax({
+                    type: "get",
+                    url: '@Url.Action("VerificarExame", "Consultas")',
+                    data: { tipoexame: $("#IdTipoExame option:selected").val() },
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (obj) {
+                        if (obj != null) {
+                            console.log(obj)
+                            var data = obj;
+                            var selectbox = $('#IdExame');
+                            selectbox.find('option').remove();
+                            $.each(data, function (i, d) {
+                                $('<option>').val(d.Value).text(d.Text).appendTo(selectbox);
+                            });
+                        }
+                        if (selecionado != null && selecionado != "") {
+                            $('#IdExame').val(selecionado);
+                        }
+                    }
+                });
+            }
+        }
+
+        $('#IdTipoExame').on('change', function (e, item) {
+            CarregarExame($(this).val(), "")
+        });
+
+    </script>
+}
